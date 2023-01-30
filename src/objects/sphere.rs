@@ -42,13 +42,12 @@ impl Hittable for Sphere{
         let normal = (point - self.center)/ self.radius;
         let front_face = ray.direction.dot(&normal) < 0.0;
 
-        let intersection = Intersection{
+        Some(Intersection{
             t : root,
             point,
             normal: if front_face {normal} else {normal * -1.},
             material: &self.material,
-        };
-        Some(intersection)
+        })
     }
 }
 

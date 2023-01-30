@@ -58,12 +58,11 @@ impl Hittable for Cube{
         if  (point.z() - self.min.z()).abs() < EPSI {normal.set_z(-1.)};
         if  (point.z() - self.min.z()).abs() < EPSI {normal.set_z(1.)};
 
-        let intersection = Intersection{
+       Some(Intersection{
             t: t_min,
             point,
             normal,
             material :&self.material,
-        };
-        Some(intersection)
+        })
     }
 }

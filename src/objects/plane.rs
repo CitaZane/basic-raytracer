@@ -23,13 +23,11 @@ impl Hittable for Plane{
         if d_dot_n == 0.0{return None}//in case of ray paralel
         let t = self.normal.dot(&(self.point - ray.origin)) / d_dot_n;
         if t<= t_min || t>= t_max {return None}
-        let hit_record = Intersection{
+        Some(Intersection{
             t,
             point :ray.at(t),
             normal :self.normal,
             material: &self.material,
-            };
-        
-        Some(hit_record)
+        })
     }
 }
