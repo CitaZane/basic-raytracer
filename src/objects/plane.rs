@@ -27,7 +27,6 @@ impl Hittable for Plane{
             t,
             point :ray.at(t),
             normal :self.normal,
-            front_face:true,
             material: &self.material,
             };
         

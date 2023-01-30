@@ -15,6 +15,5 @@ pub struct Intersection<'a>{
     pub point: Point3D,
     pub normal: Point3D,
     pub t :f64,
-    pub front_face:bool,
     pub material:&'a Material,
 }

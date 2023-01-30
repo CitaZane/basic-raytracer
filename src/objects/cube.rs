@@ -1,4 +1,4 @@
-use crate::{point3d::{Point3D, self}, ray::Ray, color::Color, material::*};
+use crate::{point3d::Point3D, ray::Ray, material::*};
 use super::{Hittable, Intersection};
 
 pub struct Cube{
@@ -19,8 +19,6 @@ pub struct Cube{
 
 impl Cube{
     pub fn new(min:Point3D, max:Point3D, material:Material)-> Self{
-        // let matte = Matte::new(Color::red());
-        // let material = Material::Matte(matte);
         Self{min,max, material}
     }
 }
@@ -64,7 +62,6 @@ impl Hittable for Cube{
             t: t_min,
             point,
             normal,
-            front_face:true,
             material :&self.material,
         };
         Some(intersection)

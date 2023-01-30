@@ -46,7 +46,6 @@ impl Hittable for Sphere{
             t : root,
             point,
             normal: if front_face {normal} else {normal * -1.},
-            front_face,
             material: &self.material,
         };
         Some(intersection)
