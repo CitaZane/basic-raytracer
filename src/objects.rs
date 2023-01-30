@@ -1,6 +1,6 @@
-pub(crate) mod sphere;
-pub(crate) mod plane;
-pub(crate) mod cube;
+pub mod sphere;
+pub mod plane;
+pub mod cube;
 pub use sphere::*;
 pub use plane::*;
 pub use cube::*;

@@ -1,4 +1,3 @@
-
 use std::ops::{Mul,Add};
 #[derive( Debug, Clone, Copy)]
 pub struct Color {
@@ -28,10 +27,7 @@ impl Color{
     }
     pub fn write(&mut self, samples_per_pixel: i32){
         let scale = 1.0 / samples_per_pixel as f64;
-        // let exposure = 1.;
-        // let gamma = 2.;
         self.flatten_by_scale(scale);
-        // self.apply_gamma_corection(exposure, gamma);
         self.clamp(0.0, 0.999);
 
         let red = (255.999* self.r )as i32;
@@ -49,11 +45,6 @@ impl Color{
         self.g = clamp(self.g, min, max);
         self.b = clamp(self.b, min, max);
     }
-    // fn apply_gamma_corection(&mut self, exposure: f64, gamma:f64){
-    //     self.r =(self.r * exposure).powf(gamma);
-    //     self.g =(self.g * exposure).powf(gamma);
-    //     self.b =(self.b * exposure).powf(gamma);
-    // }
 }
 
 impl Add for Color{
