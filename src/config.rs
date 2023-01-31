@@ -3,7 +3,7 @@ use crate::{
     color::Color,
     image::Image,
     material::{Material, Matte},
-    objects::{Hittable, Sphere, Cube, Plane},
+    objects::{Hittable, Sphere, Cube, Plane, Cylinder},
     point3d::Point3D,
 };
 use std::f64::consts::PI;
@@ -113,6 +113,14 @@ impl Config {
         objects.push(plane_obj);
 
         // TODO cylinder
+        let base = Point3D::new(2., -1. ,-7.);
+        let r = 0.5;
+        let height = 2.;
+        let axis = Point3D::new(0., 1.,0.).unit_vector();
+        let material = Material::matte(Color::green());
+        let cylinder = Cylinder::new(base,axis,r,  material, height);
+        let cylinder_obj : Box<dyn Hittable> = Box::new(cylinder);
+        objects.push(cylinder_obj);
 
         objects
     }

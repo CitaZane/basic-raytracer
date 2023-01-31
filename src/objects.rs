@@ -1,10 +1,12 @@
 pub mod cube;
 pub mod plane;
 pub mod sphere;
+pub mod cylinder;
 
 pub use cube::*;
 pub use plane::*;
 pub use sphere::*;
+pub use cylinder::*;
 
 use crate::{material::Material, point3d::Point3D, ray::Ray};
 pub trait Hittable {
