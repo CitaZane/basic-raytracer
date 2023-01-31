@@ -1,15 +1,11 @@
-The main steps of ray-tracing process
-1)  calculate the ray from the camera to the pixel
-2) determine which objects the ray intersects
-3)  compute a color for that intersection point.
-
-TODO
-1) Fix cube
-2) test with plane
-3) Create cylinder
-4) implement input parsing
-
 NOTES
- light intensity from 0.0 - 1.0
+ * light intensity from 0.0 - 1.0
+ * image/samples_per_pixel and raytracer/max_depth controlls qualiy of final render and also time 
+ * some info for intersection -> 
+        - Point : 3D point of where the intersection happens
+        - t: f64 amount of distance traveled along the way till intersection point
+        - normal : 3D point-> vector perpendicular to surface hit by ray
+        - material: material of the surface 
+
 
  
