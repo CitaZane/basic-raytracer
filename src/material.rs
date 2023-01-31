@@ -17,6 +17,16 @@ impl Material {
             Material::Light(l) => l.intensity,
         }
     }
+    #[allow(dead_code)]
+    pub fn matte(color:Color)-> Material{
+        let matte = Matte::new(color);
+        Material::Matte(matte)
+    }
+    #[allow(dead_code)]
+    pub fn metal()-> Material{
+        let metal = Metal::new();
+        Material::Metal(metal)
+    }
 }
 impl Scatterable for Material {
     fn scatter(&self, ray: &Ray, intersection: &Intersection) -> Option<(Ray, Color)> {

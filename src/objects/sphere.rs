@@ -1,4 +1,4 @@
-use crate::material::Material;
+use crate::material::{Material, Light};
 use crate::point3d::Point3D;
 use crate::ray::Ray;
 
@@ -15,6 +15,15 @@ impl Sphere {
         Self {
             center,
             radius,
+            material,
+        }
+    }
+    pub fn new_light(center: Point3D, intensity:f64) -> Self {
+        let l = Light::new(intensity);
+        let material = Material::Light(l);
+        Self {
+            center,
+            radius: 1.,
             material,
         }
     }

@@ -8,12 +8,12 @@ pub struct Image {
 }
 
 impl Image {
-    pub fn new(width: usize, height: usize) -> Self {
+    pub fn new(width: usize, height: usize, samples_per_pixel:i32) -> Self {
         Self {
             width,
             height,
             pixels: vec![Color::new(0., 0., 0.); width * height],
-            samples_per_pixel: 25,
+            samples_per_pixel,
         }
     }
     pub fn set_pixel(&mut self, x: usize, y: usize, color: Color) {
