@@ -1,4 +1,4 @@
-use crate::{objects::Intersection, ray::Ray, *};
+use crate::{objects::Intersection, *};
 use rand::prelude::*;
 
 pub struct RayTracer {
