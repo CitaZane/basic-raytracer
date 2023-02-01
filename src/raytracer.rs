@@ -16,14 +16,13 @@ impl RayTracer {
         camera: Camera,
         objects: Vec<Box<dyn Hittable>>,
         light: Sphere,
-        max_depth:i32
     ) -> Self {
         Self {
             image,
             camera,
             objects,
             light,
-            max_depth,
+            max_depth:50,
         }
     }
 

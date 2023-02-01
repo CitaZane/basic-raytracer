@@ -21,6 +21,6 @@ use config::*;
 fn main() {
     let c = Config::new();
 
-    let mut ray_tracer = RayTracer::new(c.image, c.camera, c.objects, c.light, c.depth);
+    let mut ray_tracer = RayTracer::new(c.image, c.camera, c.objects, c.light);
     ray_tracer.render();
 }

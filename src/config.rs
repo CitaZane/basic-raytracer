@@ -13,7 +13,6 @@ pub struct Config {
     pub camera: Camera,
     pub light: Sphere,
     pub objects: Vec<Box<dyn Hittable>>,
-    pub depth: i32,
 }
 
 impl Config {
@@ -22,7 +21,6 @@ impl Config {
         let width = 300;
         let height = 200;
         let samples_per_pixel = 25;
-        let depth = 50;
 
         // Camera
         let origin = Point3D::new(0., 2., 0.);
@@ -34,7 +32,7 @@ impl Config {
         let center = Point3D::new(5., 10., -5.);
         let intensity = 0.5;
         
-        // scene
+        // Scene
         let objects = Config::scene_three();
         
         // helpers
@@ -47,7 +45,6 @@ impl Config {
             camera: Camera::new(origin, direction, up, fov_calc, aspect_ratio),
             light: Sphere::new_light(center, intensity),
             objects,
-            depth
         }
     }
     #[allow(dead_code)]
@@ -107,7 +104,7 @@ impl Config {
 
         // plane
         let plane_point = Point3D::new(0., -1., 0.);
-        let plane_normal = Point3D::new(0., 8., 0.).unit_vector();
+        let plane_normal = Point3D::new(0., 1., 0.).unit_vector();
         let plane = Plane::new(plane_point, plane_normal);
         let plane_obj: Box<dyn Hittable> = Box::new(plane);
         objects.push(plane_obj);
