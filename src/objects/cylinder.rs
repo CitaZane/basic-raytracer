@@ -25,34 +25,33 @@ impl Cylinder {
         &self,
         ray: &Ray,
         normal: Point3D,
+        center:Point3D,
         t_min: f64,
         t_max: f64,
     ) -> Option<(f64, Point3D, Point3D)> {
-        let denom = ray.direction.dot(&normal);
-        if denom > t_min || denom < -1. * t_min {
-            let center = self.base + Point3D::new(0., self.height, 0.);
-            let t = (center - ray.origin).dot(&normal) / denom;
-            if t >= 0.0 && t < t_max {
-                let point = ray.at(t) * 1.001;
-                if (point.x() - self.base.x()).powf(2.0) + (point.z() - self.base.z()).powf(2.0)
-                    < self.radius.powf(2.0)
-                {
-                    return Some((t, normal, point));
-                }
-            }
+        let d_dot_n = normal.dot(&ray.direction);
+        if d_dot_n == 0.0 {
+            return None;
+        } 
+        let t = normal.dot(&(center - ray.origin)) / d_dot_n;
+        if t <= t_min || t >= t_max {
+            return None;
         }
-        None
+        let point = ray.at(t);
+        if (point.x() - center.x()).powf(2.0) + (point.z() - center.z()).powf(2.0)>self.radius.powf(2.0){return None}
+        Some((t, normal,point))
     }
     fn intersect_caps(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<(f64, Point3D, Point3D)> {
         let mut normal = Point3D::new(0., 1., 0.);
         // top
-        let intersect = self.check_cap(ray, normal, t_min, t_max);
+        let center = self.base + Point3D::new(0., self.height, 0.);
+        let intersect = self.check_cap(ray, normal,center, t_min, t_max);
         if intersect.is_some() {
             return Some(intersect.unwrap());
         }
         // bottom
         normal.set_y(-1.);
-        let intersect = self.check_cap(ray, normal, t_min, t_max);
+        let intersect = self.check_cap(ray, normal,self.base, t_min, t_max);
         if intersect.is_some() {
             return Some(intersect.unwrap());
         }
