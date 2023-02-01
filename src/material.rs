@@ -3,7 +3,7 @@ use crate::{color::Color, objects::Intersection, point3d::Point3D, ray::Ray};
 pub trait Scatterable {
     fn scatter(&self, ray: &Ray, hit_record: &Intersection) -> Option<(Ray, Color)>;
 }
-
+#[derive(Clone, Copy)]
 pub enum Material {
     Matte(Matte),
     Metal(Metal),
@@ -18,12 +18,12 @@ impl Material {
         }
     }
     #[allow(dead_code)]
-    pub fn matte(color:Color)-> Material{
+    pub fn matte(color: Color) -> Material {
         let matte = Matte::new(color);
         Material::Matte(matte)
     }
     #[allow(dead_code)]
-    pub fn metal()-> Material{
+    pub fn metal() -> Material {
         let metal = Metal::new();
         Material::Metal(metal)
     }
@@ -37,7 +37,7 @@ impl Scatterable for Material {
         }
     }
 }
-
+#[derive(Clone, Copy)]
 pub struct Metal {
     color: Color,
 }
@@ -61,6 +61,7 @@ impl Scatterable for Metal {
         Some((scattered, self.color.clone()))
     }
 }
+#[derive(Clone, Copy)]
 pub struct Matte {
     color: Color,
 }
@@ -82,7 +83,7 @@ impl Scatterable for Matte {
         Some((bounced_ray, self.color.clone()))
     }
 }
-
+#[derive(Clone, Copy)]
 pub struct Light {
     intensity: f64,
 }

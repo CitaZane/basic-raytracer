@@ -6,16 +6,6 @@ pub struct Cube {
     pub max: Point3D,
     pub material: Material,
 }
-// In the example code, min and max are used to define
-// the minimum and maximum corner points of the cube.
-// min is a point that defines the corner of the cube with the
-// smallest x, y and z coordinates, and max is a point that
-// defines the corner of the cube with the largest x, y and z coordinates.
-
-// For example, if a cube is defined with the minimum corner
-// at (-0.5, -0.5, -0.5) and the maximum corner
-// at (0.5, 0.5, 0.5), this cube would have a size of 1
-// along each dimension (x, y, z) and its center would be at the point (0,0,0)
 
 impl Cube {
     pub fn new(min: Point3D, max: Point3D, material: Material) -> Self {
@@ -47,7 +37,7 @@ impl Cube {
 }
 
 impl Hittable for Cube {
-    fn hit(&self, ray: &Ray, t_min_bound: f64, t_max_bound: f64) -> Option<Intersection> {
+    fn hit<'a>(&'a self, ray: &Ray, hit_record: &mut Intersection<'a>) -> bool {
         let mut t_min = (self.min.x() - ray.origin.x()) / ray.direction.x();
         let mut t_max = (self.max.x() - ray.origin.x()) / ray.direction.x();
         if t_min > t_max {
@@ -61,7 +51,7 @@ impl Hittable for Cube {
         }
 
         if t_min > t_y_max || t_y_min > t_max {
-            return None;
+            return false;
         }
         if t_y_min > t_min {
             t_min = t_y_min
@@ -77,23 +67,28 @@ impl Hittable for Cube {
         }
 
         if t_min > t_z_max || t_z_min > t_max {
-            return None;
+            return false;
         }
         if t_z_min > t_min {
             t_min = t_z_min
         }
 
-        if t_min < t_min_bound || t_min > t_max_bound {
-            return None;
+        if t_min < hit_record.t_min || t_min > hit_record.t{
+            return false;
+        }
+        if t_min > hit_record.t{
+            return false
         }
         let point = ray.at(t_min);
         let normal = self.normal(&point);
 
-        Some(Intersection {
-            t: t_min,
-            point,
-            normal,
-            material: &self.material,
-        })
+        hit_record.point = point;
+        hit_record.normal = normal;
+        hit_record.t = t_min;
+        hit_record.material = Some(&self.material);
+        hit_record.hit_anything = true;
+
+        true
+
     }
 }
