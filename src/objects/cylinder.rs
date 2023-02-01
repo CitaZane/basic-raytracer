@@ -15,7 +15,7 @@ impl Cylinder {
     pub fn new(base: Point3D, radius: f64, material: Material, height: f64) -> Self {
         Self {
             base,
-            axis: Point3D::new(0., 1.,0.),
+            axis: Point3D::new(0., 1., 0.),
             radius,
             material,
             height,
@@ -33,11 +33,11 @@ impl Cylinder {
             let center = self.base + Point3D::new(0., self.height, 0.);
             let t = (center - ray.origin).dot(&normal) / denom;
             if t >= 0.0 && t < t_max {
-                let point = ray.at(t)* 1.001;
+                let point = ray.at(t) * 1.001;
                 if (point.x() - self.base.x()).powf(2.0) + (point.z() - self.base.z()).powf(2.0)
                     < self.radius.powf(2.0)
                 {
-                    return Some(( t, normal, point));
+                    return Some((t, normal, point));
                 }
             }
         }
@@ -58,7 +58,7 @@ impl Cylinder {
         }
         None
     }
-    fn intersect_body(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option< (f64, Point3D, Point3D)> {
+    fn intersect_body(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<(f64, Point3D, Point3D)> {
         let oc = ray.origin - self.base;
         let a = (ray.direction.x().powf(2.)) + (ray.direction.z().powf(2.));
         let b = 2. * (oc.x() * ray.direction.x() + oc.z() * ray.direction.z());
@@ -96,19 +96,19 @@ impl Hittable for Cylinder {
 
         let cap_intersect = self.intersect_caps(ray, t_min, t_max);
         if cap_intersect.is_some() {
-            let ( cap_t, cap_normal, cap_point) = cap_intersect.unwrap();
+            let (cap_t, cap_normal, cap_point) = cap_intersect.unwrap();
             point = cap_point;
             normal = cap_normal;
-            t= cap_t;
+            t = cap_t;
         } else {
             let intersect = self.intersect_body(ray, t_min, t_max);
-            if intersect.is_none(){
+            if intersect.is_none() {
                 return None;
             } else {
-                let(body_t, body_normal, body_point) = intersect.unwrap();
+                let (body_t, body_normal, body_point) = intersect.unwrap();
                 point = body_point;
                 normal = body_normal;
-                t= body_t;
+                t = body_t;
             }
         }
         Some(Intersection {
