@@ -25,7 +25,7 @@ impl Config {
         let depth = 50;
 
         // Camera
-        let origin = Point3D::new(0., 2., 0.);
+        let origin = Point3D::new(0., 1., 0.);
         let direction = Point3D::new(0., 0., -4.);
         let up = Point3D::new(0., 1., 0.);
         let fov = 25.;
@@ -97,10 +97,10 @@ impl Config {
 
         // sphere
         let center = Point3D::new(0., 0., -6.);
-        let material = Material::matte(Color::green());
+        // let material = Material::matte(Color::green());
         let radius = 1.;
         // alternative material option
-        // let material = Material::metal();
+        let material = Material::metal();
         let sphere = Sphere::new(center,radius, material);
         let sphere_obj: Box<dyn Hittable> = Box::new(sphere);
         objects.push(sphere_obj);

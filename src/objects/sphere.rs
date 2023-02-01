@@ -29,7 +29,7 @@ impl Sphere {
     }
 }
 impl Hittable for Sphere {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, hit_record: &mut Intersection) -> bool {
+    fn hit<'a>(&'a self, ray: &Ray, hit_record: &mut Intersection<'a>) -> bool {
         // transform origin so sphere now is origin-centered
         let oc = ray.origin - self.center;
         // calc quadric coefficients
@@ -46,27 +46,25 @@ impl Hittable for Sphere {
         // find the nearest root that lies in acaptable range
         // root is a intersection point
         let mut root = (-half_b - sqrtd) / a;
-        if root < t_min || t_max < root {
+        if root < hit_record.t_min || hit_record.t < root {
             root = (-half_b + sqrtd) / a;
-            if root < t_min || t_max < root {
+            if root < hit_record.t_min || hit_record.t < root {
                 return false;
             }
         }
+        if root > hit_record.t{
+            return false
+        }
         // front face tracking
         let point = ray.at(root);
-        let normal = (point - self.center) / self.radius;
+        let normal = (point -self.center) / self.radius;
         let front_face = ray.direction.dot(&normal) < 0.0;
 
         hit_record.point = ray.at(root);
         hit_record.normal = if front_face { normal } else { normal * -1. };
-        hit_record.material = Some(self.material);
+        hit_record.material = Some(&self.material);
         hit_record.t = root;
+        hit_record.hit_anything = true;
         true
-        // Some(Intersection {
-        //     t: root,
-        //     point,
-        //     normal: if front_face { normal } else { normal * -1. },
-        //     material: &self.material,
-        // })
     }
 }

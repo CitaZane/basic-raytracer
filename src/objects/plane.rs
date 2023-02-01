@@ -21,27 +21,24 @@ impl Plane {
 }
 
 impl Hittable for Plane {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, hit_record: &mut Intersection) -> bool {
+    fn hit<'a>(&'a self, ray: &Ray, hit_record: &mut Intersection<'a>) -> bool {
         let d_dot_n = self.normal.dot(&ray.direction);
         if d_dot_n == 0.0 {
             return false;
         } //in case ray paralel to plane
         let t = self.normal.dot(&(self.point - ray.origin)) / d_dot_n;
-        if t <= t_min || t >= t_max {
+        if t <= hit_record.t_min || t >= hit_record.t {
             return false;
         }
-
+        if t > hit_record.t{
+            return false
+        }
         hit_record.point = ray.at(t);
         hit_record.normal = self.normal;
-        hit_record.material = Some(self.material);
+        hit_record.material = Some(&self.material);
         hit_record.t = t;
+        hit_record.hit_anything = true;
 
         true
-        // Some(Intersection {
-        //     t,
-        //     point: ray.at(t),
-        //     normal: self.normal,
-        //     material: &self.material,
-        // })
     }
 }

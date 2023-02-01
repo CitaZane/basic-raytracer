@@ -92,43 +92,34 @@ impl Cylinder {
 }
 
 impl Hittable for Cylinder {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, hit_record: &mut Intersection) -> bool {
-        // let mut normal = Point3D::new(0., 0., 0.);
-        // let mut point = Point3D::new(0., 0., 0.);
-        // let mut t = 0.0;
-
-        let cap_intersect = self.intersect_caps(ray, t_min, t_max);
+    fn hit<'a>(&'a self, ray: &Ray, hit_record: &mut Intersection<'a>) -> bool {
+        let cap_intersect = self.intersect_caps(ray, hit_record.t_min, hit_record.t);
         if cap_intersect.is_some() {
             let (cap_t, cap_normal, cap_point) = cap_intersect.unwrap();
-            // point = cap_point;
-            // normal = cap_normal;
-            // t = cap_t;
-
+            if cap_t > hit_record.t{
+                return false
+            }
             hit_record.point = cap_point;
             hit_record.normal = cap_normal;
             hit_record.t = cap_t;
-            hit_record.material = Some(self.material);
-        } else {
-            let intersect = self.intersect_body(ray, t_min, t_max);
-            if intersect.is_none() {
-                return false;
-            } else {
-                let (body_t, body_normal, body_point) = intersect.unwrap();
-                hit_record.point = body_point;
-                hit_record.normal = body_normal;
-                hit_record.t = body_t;
-                hit_record.material = Some(self.material);
-                // point = body_point;
-                // normal = body_normal;
-                // t = body_t;
-            }
+            hit_record.material = Some(&self.material);
+            hit_record.hit_anything = true;
+            return true
         }
-        true
-        // Some(Intersection {
-        //     point,
-        //     t,
-        //     normal,
-        //     material: &self.material,
-        // })
+        let intersect = self.intersect_body(ray, hit_record.t_min, hit_record.t);
+        if intersect.is_none() {
+            return false
+        } else {
+            let (body_t, body_normal, body_point) = intersect.unwrap();
+            if body_t > hit_record.t{
+                return false
+            }
+            hit_record.point = body_point;
+            hit_record.normal = body_normal;
+            hit_record.t = body_t;
+            hit_record.material = Some(&self.material);
+            hit_record.hit_anything = true;
+            return true
+        }
     }
 }

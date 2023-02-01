@@ -57,6 +57,7 @@ impl RayTracer {
         let intersection = self.hit_scene(&ray);
 
         if intersection.hit_anything {
+
             let bounce = match intersection.material.unwrap() {
                 Material::Matte(m) => m.scatter(&ray, &intersection),
                 Material::Metal(m) => m.scatter(&ray, &intersection),
@@ -77,40 +78,24 @@ impl RayTracer {
             }
             return self.light_specular_diffuse_adjustment(&intersection) + pixel_color;
         } else {
-            // return sky
-            let unit_direction = ray.direction.unit_vector();
-            let t = 0.5 * (unit_direction.y() + 1.0);
-            return Color::white() * (1. - t) + Color::new(0.5, 0.7, 1.) * t;
-            // return Color::black();
+            return Color::white();
         }
     }
     fn hit_scene(&self, ray: &ray::Ray) -> Intersection {
-        let mut closest_hit = f64::MAX;
-        let mut closest_intersection = Intersection::new();
         let mut hit_record = Intersection::new();
         self.objects.iter().for_each(|object| {
-            if object.hit(&ray, 0.001, closest_hit, &mut hit_record) {
-                if hit_record.t < closest_hit {
-                    hit_record.hit_anything = true;
-                    closest_hit = hit_record.t;
-                    closest_intersection = hit_record;
-                }
-            }
-
-            // if hit_record.is_some() {
-            //     let new_record = hit_record.unwrap();
-            //     if new_record.t < closest_hit {
-            //         closest_hit = new_record.t;
-            //         closest_intersection = Some(new_record);
-            //     }
-            // }
-        });
-        closest_intersection
+            object.hit(&ray, &mut hit_record);
+            });
+        hit_record
     }
     fn cast_ray_to_light(&self, intersection_point: &Point3D) -> Option<objects::Intersection> {
         let light_vec = (self.light.center - *intersection_point).unit_vector();
         let shadow_ray = ray::Ray::new(intersection_point.clone(), light_vec);
-        Some(self.hit_scene(&shadow_ray))
+        let result = self.hit_scene(&shadow_ray);
+        if result.hit_anything{
+            return Some(result)
+        }
+        None
     }
     fn light_specular_diffuse_adjustment(&self, intersection: &objects::Intersection) -> Color {
         const DIFFUSE_COEF: f64 = 0.4;
