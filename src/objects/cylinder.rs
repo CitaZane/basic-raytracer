@@ -25,33 +25,37 @@ impl Cylinder {
         &self,
         ray: &Ray,
         normal: Point3D,
-        center:Point3D,
+        center: Point3D,
         t_min: f64,
         t_max: f64,
     ) -> Option<(f64, Point3D, Point3D)> {
         let d_dot_n = normal.dot(&ray.direction);
         if d_dot_n == 0.0 {
             return None;
-        } 
+        }
         let t = normal.dot(&(center - ray.origin)) / d_dot_n;
         if t <= t_min || t >= t_max {
             return None;
         }
         let point = ray.at(t);
-        if (point.x() - center.x()).powf(2.0) + (point.z() - center.z()).powf(2.0)>self.radius.powf(2.0){return None}
-        Some((t, normal,point))
+        if (point.x() - center.x()).powf(2.0) + (point.z() - center.z()).powf(2.0)
+            > self.radius.powf(2.0)
+        {
+            return None;
+        }
+        Some((t, normal, point))
     }
     fn intersect_caps(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<(f64, Point3D, Point3D)> {
         let mut normal = Point3D::new(0., 1., 0.);
         // top
         let center = self.base + Point3D::new(0., self.height, 0.);
-        let intersect = self.check_cap(ray, normal,center, t_min, t_max);
+        let intersect = self.check_cap(ray, normal, center, t_min, t_max);
         if intersect.is_some() {
             return Some(intersect.unwrap());
         }
         // bottom
         normal.set_y(-1.);
-        let intersect = self.check_cap(ray, normal,self.base, t_min, t_max);
+        let intersect = self.check_cap(ray, normal, self.base, t_min, t_max);
         if intersect.is_some() {
             return Some(intersect.unwrap());
         }
@@ -88,33 +92,43 @@ impl Cylinder {
 }
 
 impl Hittable for Cylinder {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<Intersection> {
-        let mut normal = Point3D::new(0., 0., 0.);
-        let mut point = Point3D::new(0., 0., 0.);
-        let mut t = 0.0;
+    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, hit_record: &mut Intersection) -> bool {
+        // let mut normal = Point3D::new(0., 0., 0.);
+        // let mut point = Point3D::new(0., 0., 0.);
+        // let mut t = 0.0;
 
         let cap_intersect = self.intersect_caps(ray, t_min, t_max);
         if cap_intersect.is_some() {
             let (cap_t, cap_normal, cap_point) = cap_intersect.unwrap();
-            point = cap_point;
-            normal = cap_normal;
-            t = cap_t;
+            // point = cap_point;
+            // normal = cap_normal;
+            // t = cap_t;
+
+            hit_record.point = cap_point;
+            hit_record.normal = cap_normal;
+            hit_record.t = cap_t;
+            hit_record.material = Some(self.material);
         } else {
             let intersect = self.intersect_body(ray, t_min, t_max);
             if intersect.is_none() {
-                return None;
+                return false;
             } else {
                 let (body_t, body_normal, body_point) = intersect.unwrap();
-                point = body_point;
-                normal = body_normal;
-                t = body_t;
+                hit_record.point = body_point;
+                hit_record.normal = body_normal;
+                hit_record.t = body_t;
+                hit_record.material = Some(self.material);
+                // point = body_point;
+                // normal = body_normal;
+                // t = body_t;
             }
         }
-        Some(Intersection {
-            point,
-            t,
-            normal,
-            material: &self.material,
-        })
+        true
+        // Some(Intersection {
+        //     point,
+        //     t,
+        //     normal,
+        //     material: &self.material,
+        // })
     }
 }

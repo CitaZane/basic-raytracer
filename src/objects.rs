@@ -1,21 +1,35 @@
 pub mod cube;
+pub mod cylinder;
 pub mod plane;
 pub mod sphere;
-pub mod cylinder;
 
 pub use cube::*;
+pub use cylinder::*;
 pub use plane::*;
 pub use sphere::*;
-pub use cylinder::*;
 
 use crate::{material::Material, point3d::Point3D, ray::Ray};
 pub trait Hittable {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<Intersection>;
+    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, hit_record: &mut Intersection) -> bool;
 }
 
-pub struct Intersection<'a> {
+#[derive(Clone, Copy)]
+pub struct Intersection {
     pub point: Point3D,
     pub normal: Point3D,
     pub t: f64,
-    pub material: &'a Material,
+    pub material: Option<Material>,
+    pub hit_anything: bool,
+}
+
+impl Intersection {
+    pub fn new() -> Intersection {
+        Intersection {
+            point: Point3D::new(0., 0., 0.),
+            normal: Point3D::new(0., 0., 0.),
+            t: 0.,
+            material: None,
+            hit_anything: false,
+        }
+    }
 }

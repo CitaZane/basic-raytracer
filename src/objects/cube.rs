@@ -47,7 +47,13 @@ impl Cube {
 }
 
 impl Hittable for Cube {
-    fn hit(&self, ray: &Ray, t_min_bound: f64, t_max_bound: f64) -> Option<Intersection> {
+    fn hit(
+        &self,
+        ray: &Ray,
+        t_min_bound: f64,
+        t_max_bound: f64,
+        hit_record: &mut Intersection,
+    ) -> bool {
         let mut t_min = (self.min.x() - ray.origin.x()) / ray.direction.x();
         let mut t_max = (self.max.x() - ray.origin.x()) / ray.direction.x();
         if t_min > t_max {
@@ -61,7 +67,7 @@ impl Hittable for Cube {
         }
 
         if t_min > t_y_max || t_y_min > t_max {
-            return None;
+            return false;
         }
         if t_y_min > t_min {
             t_min = t_y_min
@@ -77,23 +83,30 @@ impl Hittable for Cube {
         }
 
         if t_min > t_z_max || t_z_min > t_max {
-            return None;
+            return false;
         }
         if t_z_min > t_min {
             t_min = t_z_min
         }
 
         if t_min < t_min_bound || t_min > t_max_bound {
-            return None;
+            return false;
         }
         let point = ray.at(t_min);
         let normal = self.normal(&point);
 
-        Some(Intersection {
-            t: t_min,
-            point,
-            normal,
-            material: &self.material,
-        })
+        hit_record.point = point;
+        hit_record.normal = normal;
+        hit_record.t = t_min;
+        hit_record.material = Some(self.material);
+
+        true
+
+        // Some(Intersection {
+        //     t: t_min,
+        //     point,
+        //     normal,
+        //     material: &self.material,
+        // })
     }
 }
