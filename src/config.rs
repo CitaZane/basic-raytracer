@@ -18,18 +18,18 @@ pub struct Config {
 impl Config {
     pub fn new() -> Self {
         // Image
-        let width = 300;
-        let height = 200;
+        let width = 400;
+        let height = 300;
         let samples_per_pixel = 25;
 
         // Camera
-        let origin = Point3D::new(0., 1., 0.);
-        let direction = Point3D::new(0., 0., -4.);
+        let origin = Point3D::new(0., 2., 0.);
+        let direction = Point3D::new(0., 0.5, -5.);
         let up = Point3D::new(0., 1., 0.);
-        let fov = 25.;
+        let fov = 35.;
         
         // Light
-        let center = Point3D::new(5., 10., -5.);
+        let center = Point3D::new(8., 12., -7.);
         let intensity = 0.5;
         
         // Scene
@@ -51,10 +51,10 @@ impl Config {
     fn scene_one() -> Vec<Box<dyn Hittable>> {
         let mut objects: Vec<Box<dyn Hittable>> = vec![];
 
-        let center = Point3D::new(0., 0., -6.);
+        let center = Point3D::new(0., -0.7, -6.);
         let matte = Matte::new(Color::green());
         let material = Material::Matte(matte);
-        let sphere = Sphere::new(center, 1., material);
+        let sphere = Sphere::new(center, 1.3, material);
         let object: Box<dyn Hittable> = Box::new(sphere);
 
         objects.push(object);
@@ -64,8 +64,8 @@ impl Config {
     fn scene_two() -> Vec<Box<dyn Hittable>> {
         let mut objects: Vec<Box<dyn Hittable>> = vec![];
         // cube
-        let min = Point3D::new(-2., -1., -4.);
-        let max = Point3D::new(-1., 0., -5.);
+        let min = Point3D::new(-1., -1., -4.);
+        let max = Point3D::new(0., 0., -5.);
         let matte = Matte::new(Color::red());
         let material = Material::Matte(matte);
         let cube = Cube::new(min, max, material);
@@ -93,11 +93,11 @@ impl Config {
         objects.push(cube_obj);
 
         // sphere
-        let center = Point3D::new(0., 0., -6.);
-        // let material = Material::matte(Color::green());
-        let radius = 1.;
+        let center = Point3D::new(0., 0.2, -7.5);
+        let material = Material::matte(Color::green());
+        let radius = 1.2;
         // alternative material option
-        let material = Material::metal();
+        // let material = Material::metal();
         let sphere = Sphere::new(center,radius, material);
         let sphere_obj: Box<dyn Hittable> = Box::new(sphere);
         objects.push(sphere_obj);
@@ -110,7 +110,7 @@ impl Config {
         objects.push(plane_obj);
 
         // cylinder
-        let base = Point3D::new(2., -1. ,-7.);
+        let base = Point3D::new(2.5, -1. ,-6.);
         let r = 0.5;
         let height = 2.;
         let material = Material::matte(Color::green());

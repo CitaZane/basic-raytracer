@@ -77,7 +77,8 @@ impl RayTracer {
             }
             return self.light_specular_diffuse_adjustment(&intersection) + pixel_color;
         } else {
-            return Color::white();
+            // return Color::white();
+            Color::new(0.5, 0.7, 1.) 
         }
     }
     fn hit_scene(&self, ray: &ray::Ray) -> Intersection {
